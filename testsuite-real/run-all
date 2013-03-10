@@ -1,0 +1,37 @@
+#!/bin/bash
+
+
+function run()
+{
+    cmd=$1
+
+    echo
+    echo "*** running $cmd ***"
+    echo
+
+    ./$cmd
+
+    if [ $? != 0 ] ; then
+        echo "failed"
+        exit 1
+    fi
+}
+
+
+run simple1
+
+run permissions1
+run permissions2
+
+run owner1
+run owner2
+run owner3
+
+run directory1
+
+run missing-directory1
+
+run error1
+run error2
+run error4
+
