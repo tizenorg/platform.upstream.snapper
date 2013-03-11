@@ -16,7 +16,7 @@ Name:           snapper
 Version:        0.1.2
 Release:        0
 Source:         snapper-%{version}.tar.bz2
-Prefix:         /usr
+BuildRequires:  gettext-tools
 BuildRequires:  boost-devel
 BuildRequires:  doxygen
 BuildRequires:  gcc-c++
@@ -38,7 +38,7 @@ Url:            http://en.opensuse.org/Portal:Snapper
 This package contains snapper, a tool for filesystem snapshot management.
 
 %package -n snapper-zypp-plugin
-Requires:       dbus-1-python
+Requires:       dbus-python
 Requires:       snapper
 Requires:       zypp-plugin-python
 Requires:       libzypp(plugin:commit)
@@ -80,17 +80,11 @@ This package contains libsnapper, a library for filesystem snapshot management.
 export CFLAGS="$RPM_OPT_FLAGS -DNDEBUG"
 export CXXFLAGS="$RPM_OPT_FLAGS -DNDEBUG"
 
-aclocal
-libtoolize --force --automake --copy
-autoheader
-automake --add-missing --copy
-autoconf
-
-./configure --libdir=%{_libdir} --prefix=%{prefix} --mandir=%{_mandir} --docdir=%{prefix}/share/doc/packages/snapper --disable-ext4 --disable-silent-rules
+%reconfigure  --docdir=%{_prefix}/share/doc/packages/snapper --disable-ext4 --disable-silent-rules
 make %{?jobs:-j%jobs}
 
 %install
-make install DESTDIR="$RPM_BUILD_ROOT"
+%make_install
 
 install -D data/sysconfig.snapper $RPM_BUILD_ROOT/etc/sysconfig/snapper
 
@@ -105,11 +99,11 @@ install -D data/sysconfig.snapper $RPM_BUILD_ROOT/etc/sysconfig/snapper
 
 %files 
 %defattr(-,root,root)
-%{prefix}/bin/snapper
-%{prefix}/sbin/snapperd
+%{_prefix}/bin/snapper
+%{_prefix}/sbin/snapperd
 %doc %{_mandir}/*/*
 %config /etc/dbus-1/system.d/org.opensuse.Snapper.conf
-%{prefix}/share/dbus-1/system-services/org.opensuse.Snapper.service
+%{_prefix}/share/dbus-1/system-services/org.opensuse.Snapper.service
 
 %files -n libsnapper
 %defattr(-,root,root)
@@ -120,15 +114,14 @@ install -D data/sysconfig.snapper $RPM_BUILD_ROOT/etc/sysconfig/snapper
 %config(noreplace) %{_sysconfdir}/snapper/config-templates/default
 %dir %{_sysconfdir}/snapper/filters
 %config(noreplace) %{_sysconfdir}/snapper/filters/*.txt
-%doc %dir %{prefix}/share/doc/packages/snapper
-%doc %{prefix}/share/doc/packages/snapper/AUTHORS
-%doc %{prefix}/share/doc/packages/snapper/COPYING
+%doc %dir %{_prefix}/share/doc/packages/snapper
+%doc %{_prefix}/share/doc/packages/snapper/AUTHORS
+%doc %{_prefix}/share/doc/packages/snapper/COPYING
 %config(noreplace) %{_sysconfdir}/sysconfig/snapper
 %files -n libsnapper-devel
 %defattr(-,root,root)
-%{_libdir}/libsnapper.la
 %{_libdir}/libsnapper.so
-%{prefix}/include/snapper
+%{_prefix}/include/snapper
 
 
 %files -n snapper-zypp-plugin
