@@ -17,6 +17,7 @@ Version:        0.1.2
 Release:        0
 Source:         snapper-%{version}.tar.bz2
 BuildRequires:  gettext-tools
+BuildRequires:  sed
 BuildRequires:  boost-devel
 BuildRequires:  doxygen
 BuildRequires:  gcc-c++
@@ -87,6 +88,10 @@ make %{?jobs:-j%jobs}
 %make_install
 
 install -D data/sysconfig.snapper $RPM_BUILD_ROOT/etc/sysconfig/snapper
+install -D $RPM_BUILD_ROOT/etc/snapper/config-templates/default $RPM_BUILD_ROOT/etc/snapper/configs/root
+
+sed -i 's|ALLOW_USERS=""|ALLOW_USERS="root"|' $RPM_BUILD_ROOT/etc/snapper/configs/root
+sed -i 's|SNAPPER_CONFIGS=""|SNAPPER_CONFIGS="root"|' $RPM_BUILD_ROOT/etc/sysconfig/snapper
 
 %{find_lang} snapper
 
@@ -97,7 +102,7 @@ install -D data/sysconfig.snapper $RPM_BUILD_ROOT/etc/sysconfig/snapper
 
 %lang_package
 
-%files 
+%files
 %defattr(-,root,root)
 %{_prefix}/bin/snapper
 %{_prefix}/sbin/snapperd
@@ -110,6 +115,7 @@ install -D data/sysconfig.snapper $RPM_BUILD_ROOT/etc/sysconfig/snapper
 %{_libdir}/libsnapper.so.*
 %dir %{_sysconfdir}/snapper
 %dir %{_sysconfdir}/snapper/configs
+%config(noreplace) %{_sysconfdir}/snapper/configs/root
 %dir %{_sysconfdir}/snapper/config-templates
 %config(noreplace) %{_sysconfdir}/snapper/config-templates/default
 %dir %{_sysconfdir}/snapper/filters
@@ -118,6 +124,7 @@ install -D data/sysconfig.snapper $RPM_BUILD_ROOT/etc/sysconfig/snapper
 %doc %{_prefix}/share/doc/packages/snapper/AUTHORS
 %doc %{_prefix}/share/doc/packages/snapper/COPYING
 %config(noreplace) %{_sysconfdir}/sysconfig/snapper
+
 %files -n libsnapper-devel
 %defattr(-,root,root)
 %{_libdir}/libsnapper.so
