@@ -87,11 +87,23 @@ make %{?jobs:-j%jobs}
 %install
 %make_install
 
+mkdir -p $RPM_BUILD_ROOT/usr/lib/systemd/system/
+mkdir -p $RPM_BUILD_ROOT/usr/lib/systemd/system/multi-user.target.wants
+
+install -D scripts/snapper-hourly $RPM_BUILD_ROOT/usr/sbin/snapper-hourly
+install -D scripts/snapper-daily $RPM_BUILD_ROOT/usr/sbin/snapper-daily
+install -D data/snapper-hourly.timer $RPM_BUILD_ROOT/usr/lib/systemd/system/snapper-hourly.timer
+install -D data/snapper-hourly.service $RPM_BUILD_ROOT/usr/lib/systemd/system/snapper-hourly.service
+install -D data/snapper-daily.timer $RPM_BUILD_ROOT/usr/lib/systemd/system/snapper-daily.timer
+install -D data/snapper-daily.service $RPM_BUILD_ROOT/usr/lib/systemd/system/snapper-daily.service
 install -D data/sysconfig.snapper $RPM_BUILD_ROOT/etc/sysconfig/snapper
 install -D $RPM_BUILD_ROOT/etc/snapper/config-templates/default $RPM_BUILD_ROOT/etc/snapper/configs/root
 
 sed -i 's|ALLOW_USERS=""|ALLOW_USERS="root"|' $RPM_BUILD_ROOT/etc/snapper/configs/root
 sed -i 's|SNAPPER_CONFIGS=""|SNAPPER_CONFIGS="root"|' $RPM_BUILD_ROOT/etc/sysconfig/snapper
+
+%install_service multi-user.target.wants snapper-hourly.timer
+%install_service multi-user.target.wants snapper-daily.timer
 
 %{find_lang} snapper
 
@@ -106,9 +118,17 @@ sed -i 's|SNAPPER_CONFIGS=""|SNAPPER_CONFIGS="root"|' $RPM_BUILD_ROOT/etc/syscon
 %defattr(-,root,root)
 %{_prefix}/bin/snapper
 %{_prefix}/sbin/snapperd
+%{_prefix}/sbin/snapper-hourly
+%{_prefix}/sbin/snapper-daily
 %doc %{_mandir}/*/*
 %config /etc/dbus-1/system.d/org.opensuse.Snapper.conf
 %{_prefix}/share/dbus-1/system-services/org.opensuse.Snapper.service
+%{_unitdir}/snapper-hourly.timer
+%{_unitdir}/multi-user.target.wants/snapper-hourly.timer
+%{_unitdir}/snapper-hourly.service
+%{_unitdir}/snapper-daily.timer
+%{_unitdir}/multi-user.target.wants/snapper-daily.timer
+%{_unitdir}/snapper-daily.service
 
 %files -n libsnapper
 %defattr(-,root,root)

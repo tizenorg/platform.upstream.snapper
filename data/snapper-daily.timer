@@ -1,0 +1,6 @@
+[Unit]
+Description=Daily Snapper snapshot creation/cleanup
+
+[Timer]
+OnBootSec=30min
+OnUnitActiveSec=1day
