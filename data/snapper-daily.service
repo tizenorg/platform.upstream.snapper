@@ -1,0 +1,8 @@
+[Unit]
+Description=Daily Snapper snapshot creation/cleanup
+After=dbus.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/snapper-daily
+IOSchedulingClass=idle
