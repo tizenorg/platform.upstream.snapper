@@ -1,0 +1,5 @@
+* Tue Jun 25 2013 William Douglas <william.douglas@intel.com> accepted/tizen/20130520.094327@a432665
+- Add systemd units for running Snapper scripts
+- Add default config changes
+
+
