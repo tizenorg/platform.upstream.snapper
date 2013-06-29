@@ -16,6 +16,7 @@ Name:           snapper
 Version:        0.1.2
 Release:        0
 Source:         snapper-%{version}.tar.bz2
+Source1001: 	snapper.manifest
 BuildRequires:  gettext-tools
 BuildRequires:  sed
 BuildRequires:  boost-devel
@@ -76,6 +77,7 @@ This package contains libsnapper, a library for filesystem snapshot management.
 
 %prep
 %setup -n snapper-%{version}
+cp %{SOURCE1001} .
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -DNDEBUG"
@@ -115,6 +117,7 @@ sed -i 's|SNAPPER_CONFIGS=""|SNAPPER_CONFIGS="root"|' $RPM_BUILD_ROOT/etc/syscon
 %lang_package
 
 %files
+%manifest %{name}.manifest
 %defattr(-,root,root)
 %{_prefix}/bin/snapper
 %{_prefix}/sbin/snapperd
@@ -131,6 +134,7 @@ sed -i 's|SNAPPER_CONFIGS=""|SNAPPER_CONFIGS="root"|' $RPM_BUILD_ROOT/etc/syscon
 %{_unitdir}/snapper-daily.service
 
 %files -n libsnapper
+%manifest %{name}.manifest
 %defattr(-,root,root)
 %{_libdir}/libsnapper.so.*
 %dir %{_sysconfdir}/snapper
@@ -146,12 +150,14 @@ sed -i 's|SNAPPER_CONFIGS=""|SNAPPER_CONFIGS="root"|' $RPM_BUILD_ROOT/etc/syscon
 %config(noreplace) %{_sysconfdir}/sysconfig/snapper
 
 %files -n libsnapper-devel
+%manifest %{name}.manifest
 %defattr(-,root,root)
 %{_libdir}/libsnapper.so
 %{_prefix}/include/snapper
 
 
 %files -n snapper-zypp-plugin
+%manifest %{name}.manifest
 %defattr(-,root,root)
 /usr/lib/zypp/plugins/commit/snapper.py*
 
