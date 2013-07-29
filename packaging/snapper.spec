@@ -13,9 +13,9 @@
 # published by the Open Source Initiative.
 
 Name:           snapper
-Version:        0.1.2
+Version:        0.1.5
 Release:        0
-Source:         snapper-%{version}.tar.bz2
+Source:         snapper-%{version}.tar.gz
 Source1001: 	snapper.manifest
 BuildRequires:  gettext-tools
 BuildRequires:  sed
@@ -83,7 +83,7 @@ cp %{SOURCE1001} .
 export CFLAGS="$RPM_OPT_FLAGS -DNDEBUG"
 export CXXFLAGS="$RPM_OPT_FLAGS -DNDEBUG"
 
-%reconfigure  --docdir=%{_prefix}/share/doc/packages/snapper --disable-ext4 --disable-silent-rules
+%reconfigure  --docdir=%{_prefix}/share/doc/packages/snapper --disable-ext4 --disable-silent-rules --disable-pam
 make %{?jobs:-j%jobs}
 
 %install
@@ -123,7 +123,6 @@ sed -i 's|SNAPPER_CONFIGS=""|SNAPPER_CONFIGS="root"|' $RPM_BUILD_ROOT/etc/syscon
 %{_prefix}/sbin/snapperd
 %{_prefix}/sbin/snapper-hourly
 %{_prefix}/sbin/snapper-daily
-%doc %{_mandir}/*/*
 %config /etc/dbus-1/system.d/org.opensuse.Snapper.conf
 %{_prefix}/share/dbus-1/system-services/org.opensuse.Snapper.service
 %{_unitdir}/snapper-hourly.timer
@@ -146,7 +145,7 @@ sed -i 's|SNAPPER_CONFIGS=""|SNAPPER_CONFIGS="root"|' $RPM_BUILD_ROOT/etc/syscon
 %config(noreplace) %{_sysconfdir}/snapper/filters/*.txt
 %doc %dir %{_prefix}/share/doc/packages/snapper
 %doc %{_prefix}/share/doc/packages/snapper/AUTHORS
-%doc %{_prefix}/share/doc/packages/snapper/COPYING
+%license %{_prefix}/share/doc/packages/snapper/COPYING
 %config(noreplace) %{_sysconfdir}/sysconfig/snapper
 
 %files -n libsnapper-devel
