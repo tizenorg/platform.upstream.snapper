@@ -8,6 +8,10 @@ INCLUDES = -I/usr/include/libxml2
 
 lib_LTLIBRARIES = libsnapper.la
 
+if HAVE_XATTRS
+TMP_XA = XAttributes.cc	XAttributes.h
+endif
+
 libsnapper_la_SOURCES =					\
 	Factory.cc		Factory.h		\
 	Snapper.cc		Snapper.h		\
@@ -28,7 +32,9 @@ libsnapper_la_SOURCES =					\
 	Exception.h					\
 	SnapperTmpl.h					\
 	SnapperTypes.h					\
-	SnapperDefines.h
+	SnapperDefines.h				\
+	$(TMP_XA)
+
 
 if ENABLE_BTRFS
 libsnapper_la_SOURCES +=				\
@@ -47,7 +53,7 @@ endif
 
 
 libsnapper_la_LDFLAGS = -version-info @LIBVERSION_INFO@
-libsnapper_la_LIBADD = -lboost_thread-mt -lxml2 -lz -lm
+libsnapper_la_LIBADD = -lboost_thread-mt -lboost_system-mt -lxml2 -lz -lm
 
 pkgincludedir = $(includedir)/snapper
 
@@ -57,5 +63,6 @@ pkginclude_HEADERS =					\
 	Snapshot.h					\
 	File.h						\
 	Comparison.h					\
+	AsciiFile.h					\
 	Exception.h					\
 	Logger.h

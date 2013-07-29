@@ -531,10 +531,10 @@ namespace snapper
 	if (status & CREATED) status = CREATED;
 	if (status & DELETED) status = DELETED;
 
-	if (status & (CONTENT | PERMISSIONS | USER | GROUP))
+	if (status & (CONTENT | PERMISSIONS | USER | GROUP | XATTRS))
 	{
 	    // TODO check for content sometimes not required
-	    status &= ~(CONTENT | PERMISSIONS | USER | GROUP);
+	    status &= ~(CONTENT | PERMISSIONS | USER | GROUP | XATTRS);
 
 	    string dirname = snapper::dirname(name);
 	    string basename = snapper::basename(name);
@@ -627,7 +627,7 @@ namespace snapper
 	else
 	{
 	    node->status &= ~(CREATED | DELETED);
-	    node->status |= CONTENT | PERMISSIONS | USER | GROUP;
+	    node->status |= CONTENT | PERMISSIONS | USER | GROUP | XATTRS;
 	}
     }
 
@@ -760,7 +760,7 @@ namespace snapper
 		else
 		{
 		    node->status &= ~(CREATED | DELETED);
-		    node->status |= CONTENT | PERMISSIONS | USER | GROUP;
+		    node->status |= CONTENT | PERMISSIONS | USER | GROUP | XATTRS;
 		}
 
 		merge(processor, &it->second, from, to, x);
@@ -778,7 +778,7 @@ namespace snapper
 		else
 		{
 		    node->status &= ~(CREATED | DELETED);
-		    node->status |= CONTENT | PERMISSIONS | USER | GROUP;
+		    node->status |= CONTENT | PERMISSIONS | USER | GROUP | XATTRS;
 		}
 
 		merge(processor, &it->second, from, to, x);
@@ -930,6 +930,13 @@ namespace snapper
 	y2deb("set_xattr path:'" << path << "'");
 #endif
 
+#ifdef ENABLE_XATTRS
+	StreamProcessor* processor = (StreamProcessor*) user;
+
+	tree_node* node = processor->files.insert(path);
+	node->status |= XATTRS;
+#endif
+
 	return 0;
     }
 
@@ -939,6 +946,13 @@ namespace snapper
     {
 #ifdef DEBUG_PROCESS
 	y2deb("remove_xattr path:'" << path << "'");
+#endif
+
+#ifdef ENABLE_XATTRS
+	StreamProcessor* processor = (StreamProcessor*) user;
+
+	tree_node* node = processor->files.insert(path);
+	node->status |= XATTRS;
 #endif
 
 	return 0;

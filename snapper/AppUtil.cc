@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <glob.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/utsname.h>
@@ -34,7 +35,6 @@
 #include <pwd.h>
 #include <dirent.h>
 #include <mntent.h>
-#include <libxml/tree.h>
 #include <boost/algorithm/string.hpp>
 
 #include "snapper/Log.h"
@@ -274,6 +274,8 @@ namespace snapper
 
 	if (getpwuid_r(uid, &pwd, buf, bufsize, &result) != 0 || result != &pwd)
 	    return "unknown";
+
+	memset(pwd.pw_passwd, 0, strlen(pwd.pw_passwd));
 
 	return pwd.pw_name;
     }

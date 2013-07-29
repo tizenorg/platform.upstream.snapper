@@ -1,5 +1,12 @@
 
-#include <string>
+#include <stdlib.h>
+
+#include <iostream>
+
+
+#define CONFIG "testsuite"
+#define SUBVOLUME "/" CONFIG
+
 
 using namespace std;
 
@@ -50,6 +57,7 @@ void first_snapshot();
 void second_snapshot();
 void check_undo_statistics(unsigned int numCreate, unsigned int numModify,
 			   unsigned int numDelete);
+void check_xa_undo_statistics(unsigned int xaNumCreate, unsigned int xaNumReplace, unsigned int xaNumDelete);
 void undo();
 void check_undo_errors(unsigned int numCreate, unsigned int numModify,
 		       unsigned int numDelete);

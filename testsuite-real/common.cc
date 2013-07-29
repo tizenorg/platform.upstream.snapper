@@ -1,9 +1,5 @@
 
-#include <stdlib.h>
-#include <glob.h>
-#include <iostream>
-#include <fstream>
-
+#include "config.h"
 #include "common.h"
 
 #include <snapper/Snapper.h>
@@ -19,14 +15,15 @@ extern char* program_invocation_short_name;
 
 using namespace snapper;
 
-#define SUBVOLUME "/testsuite"
-
 Snapper* sh = NULL;
 
 Snapshots::iterator first;
 Snapshots::iterator second;
 
 unsigned int numCreateErrors, numModifyErrors, numDeleteErrors;
+#ifdef ENABLE_XATTRS
+unsigned int xaCreate, xaReplace, xaDelete;
+#endif
 
 
 void
@@ -37,7 +34,7 @@ setup()
 
     initDefaultLogger();
 
-    sh = new Snapper("testsuite");
+    sh = new Snapper(CONFIG);
 }
 
 
@@ -51,7 +48,7 @@ cleanup()
 void
 first_snapshot()
 {
-    first = sh->createPreSnapshot("testsuite");
+    first = sh->createPreSnapshot(CONFIG);
     first->setCleanup("number");
 }
 
@@ -59,7 +56,7 @@ first_snapshot()
 void
 second_snapshot()
 {
-    second = sh->createPostSnapshot("testsuite", first);
+    second = sh->createPostSnapshot(CONFIG, first);
     second->setCleanup("number");
 }
 
@@ -80,6 +77,16 @@ check_undo_statistics(unsigned int numCreate, unsigned int numModify, unsigned i
     check_equal(rs.numDelete, numDelete);
 }
 
+
+#ifdef ENABLE_XATTRS
+void
+check_xa_undo_statistics(unsigned int xaNumCreate, unsigned xaNumReplace, unsigned int xaNumDelete)
+{
+    check_equal(xaCreate, xaNumCreate);
+    check_equal(xaDelete, xaNumDelete);
+    check_equal(xaReplace, xaNumReplace);
+}
+#endif
 
 void
 undo()
@@ -120,6 +127,14 @@ undo()
     }
 
     cout << "undoing done" << endl;
+
+#ifdef ENABLE_XATTRS
+    XAUndoStatistic xs = files.getXAUndoStatistic();
+    xaCreate = xs.numCreate;
+    xaReplace = xs.numReplace;
+    xaDelete = xs.numDelete;
+#endif
+
 }
 
 
