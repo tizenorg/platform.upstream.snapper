@@ -1,3 +1,6 @@
+* Thu Aug 01 2013 William Douglas <william.douglas@intel.com> upstream/0.1.5@c470b69
+- update to v1.5.0
+
 * Tue Jun 25 2013 William Douglas <william.douglas@intel.com> accepted/tizen/20130520.094327@a432665
 - Add systemd units for running Snapper scripts
 - Add default config changes
