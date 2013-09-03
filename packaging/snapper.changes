@@ -1,3 +1,9 @@
+* Tue Sep 03 2013 Patrick McCarty <patrick.mccarty@linux.intel.com> e784b51
+- Remove extra, unneeded documentation from /usr/share/doc/snapper
+- Use %license macro to install the license file from the build
+  directory, not the buildroot
+- Fix RPM group tags
+
 * Thu Aug 01 2013 William Douglas <william.douglas@intel.com> upstream/0.1.5@c470b69
 - update to v1.5.0
 

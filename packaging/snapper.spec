@@ -33,7 +33,7 @@ Recommends:     snapper-zypp-plugin
 Supplements:    btrfs-progs
 Summary:        Tool for filesystem snapshot management
 License:        GPL-2.0
-Group:          System/Packages
+Group:          System/Utilities
 Url:            http://en.opensuse.org/Portal:Snapper
 
 %description
@@ -45,7 +45,7 @@ Requires:       snapper
 Requires:       zypp-plugin-python
 Requires:       libzypp(plugin:commit)
 Summary:        A zypp commit plugin for calling snapper
-Group:          System/Packages
+Group:          System/Utilities
 
 %description -n snapper-zypp-plugin
 This package contains a plugin for zypp that makes filesystem snapshots with
@@ -59,7 +59,7 @@ Requires:       libsnapper = %version
 Requires:       libstdc++-devel
 Requires:       libxml2-devel
 Summary:        Header files and documentation for libsnapper
-Group:          Development/Languages/C and C++
+Group:          System/Development
 
 %description -n libsnapper-devel
 This package contains header files and documentation for developing with
@@ -83,7 +83,7 @@ cp %{SOURCE1001} .
 export CFLAGS="$RPM_OPT_FLAGS -DNDEBUG"
 export CXXFLAGS="$RPM_OPT_FLAGS -DNDEBUG"
 
-%reconfigure  --docdir=%{_prefix}/share/doc/packages/snapper --disable-ext4 --disable-silent-rules --disable-pam
+%reconfigure --disable-ext4 --disable-silent-rules --disable-pam
 make %{?jobs:-j%jobs}
 
 %install
@@ -107,6 +107,8 @@ sed -i 's|SNAPPER_CONFIGS=""|SNAPPER_CONFIGS="root"|' $RPM_BUILD_ROOT/etc/syscon
 %install_service multi-user.target.wants snapper-hourly.timer
 %install_service multi-user.target.wants snapper-daily.timer
 
+rm -rf %{buildroot}%{_datadir}/doc/snapper
+
 %{find_lang} snapper
 
 %post -n libsnapper  -p /sbin/ldconfig
@@ -119,6 +121,7 @@ sed -i 's|SNAPPER_CONFIGS=""|SNAPPER_CONFIGS="root"|' $RPM_BUILD_ROOT/etc/syscon
 %files
 %manifest %{name}.manifest
 %defattr(-,root,root)
+%license COPYING
 %{_prefix}/bin/snapper
 %{_prefix}/sbin/snapperd
 %{_prefix}/sbin/snapper-hourly
@@ -135,6 +138,7 @@ sed -i 's|SNAPPER_CONFIGS=""|SNAPPER_CONFIGS="root"|' $RPM_BUILD_ROOT/etc/syscon
 %files -n libsnapper
 %manifest %{name}.manifest
 %defattr(-,root,root)
+%license COPYING
 %{_libdir}/libsnapper.so.*
 %dir %{_sysconfdir}/snapper
 %dir %{_sysconfdir}/snapper/configs
@@ -143,9 +147,6 @@ sed -i 's|SNAPPER_CONFIGS=""|SNAPPER_CONFIGS="root"|' $RPM_BUILD_ROOT/etc/syscon
 %config(noreplace) %{_sysconfdir}/snapper/config-templates/default
 %dir %{_sysconfdir}/snapper/filters
 %config(noreplace) %{_sysconfdir}/snapper/filters/*.txt
-%doc %dir %{_prefix}/share/doc/packages/snapper
-%doc %{_prefix}/share/doc/packages/snapper/AUTHORS
-%license %{_prefix}/share/doc/packages/snapper/COPYING
 %config(noreplace) %{_sysconfdir}/sysconfig/snapper
 
 %files -n libsnapper-devel
